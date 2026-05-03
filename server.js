@@ -4,6 +4,14 @@ const login = require("./login");
 const getRobloxStats = require("./cookiechecker.js");
 const PORT = process.env.PORT || 3000;
 
+process.on("uncaughtException", (err) => {
+    console.error("UNCAUGHT:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+    console.error("REJECTION:", err);
+});
+
 const log = {
     info: (msg) => console.log(`\x1b[36m[INFO]\x1b[0m ${msg}`),
     success: (msg) => console.log(`\x1b[32m[SUCCESS]\x1b[0m ${msg}`),

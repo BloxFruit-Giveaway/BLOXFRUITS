@@ -1,0 +1,291 @@
+/* styles/style.css */
+
+:root{
+    --bg:#050814;
+    --accent:#00b4ff;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Arial;
+    color: white;
+
+    background: linear-gradient(180deg,#000814,#001d3d);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(0,180,255,0.1), transparent 60%);
+    pointer-events: none;
+}
+
+.topbar{
+    backdrop-filter: blur(14px);
+    background: rgba(5, 8, 20, 0.6);
+    border-bottom: 1px solid rgba(0,180,255,0.15);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 12px;
+    background:rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid rgba(0,180,255,0.25);
+    position:sticky;
+    top:0;
+
+    z-index: 1000; /* add this */
+}
+
+#fruitsSection,
+#gamepassesSection,
+#permanentSection {
+    min-height: 70vh;
+}
+
+.logo img{
+    width:110px;
+    height:34px;
+    object-fit:contain;
+}
+
+.nav button{
+    border:none;
+    transition: 0.2s;
+    padding:7px 10px;
+    border-radius:10px;
+    background:#0b1a33;
+    color:white;
+    cursor:pointer;
+}
+
+.nav button:hover {
+    transform: translateY(-2px);
+    background: #123a6a;
+}
+
+.nav button.active{
+    background:var(--accent);
+    color:black;
+}
+
+h2{
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin: 10px 0;
+    text-align:center;
+    color:var(--accent);
+}
+
+h2::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 2px;
+    margin: 6px auto 0;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:12px;
+    padding:14px;
+}
+
+.card{
+    animation: fadeIn 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    background:#0b1a33; /* force base color */
+    border-radius:14px;
+    padding:10px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+.card p{
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    color: #ffffff !important;
+}
+
+.card:hover{
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0,180,255,0.25);
+}
+
+.card img{
+    width:100%;
+    height:100px;
+    object-fit:contain;
+}
+
+/* COMMON (Gray) */
+.card.common{
+    border:1px solid #9e9e9e;
+    background:#1a1a1a;
+}
+
+/* UNCOMMON (Blue) */
+.card.uncommon{
+    border:1px solid #2196f3;
+    background:#0a1a2a;
+}
+
+/* RARE (Purple) */
+.card.rare{
+    border:1px solid #9c27b0;
+    background:#1a0a2a;
+}
+
+/* LEGENDARY (Pink) */
+.card.legendary{
+    border:1px solid #ff4da6;
+    background:#2a0a1a;
+}
+
+/* MYTHICAL (Red) */
+.card.mythical{
+    border:1px solid #ff2b2b;
+    background:#2a0a0a;
+}
+
+/* OPTIONAL subtle glow */
+/* COMMON */
+.card.common:hover {
+    box-shadow: 0 0 8px rgba(150, 150, 150, 0.6);
+}
+
+/* UNCOMMON (blue) */
+.card.uncommon:hover {
+    box-shadow: 0 0 10px rgba(33, 150, 243, 0.7);
+}
+
+/* RARE */
+.card.rare:hover {
+    box-shadow: 0 0 10px rgba(156, 39, 176, 0.7);
+}
+
+/* LEGENDARY */
+.card.legendary:hover {
+    box-shadow: 0 0 12px rgba(255, 77, 166, 0.8);
+}
+
+/* MYTHICAL */
+.card.mythical:hover {
+    box-shadow: 0 0 14px rgba(255, 43, 43, 0.85);
+}
+
+/* PERMANENT */
+.card.permanent:hover {
+    box-shadow: 0 0 14px rgba(255, 215, 0, 0.9);
+}
+
+/* PERMANENT STYLE (yellow theme) */
+.card.permanent{
+    border:2px solid #fff176;          /* brighter yellow */
+    background:#3a3000;                /* darker yellow */
+}
+
+.card.permanent:hover {
+    box-shadow:0 0 12px #ffd700;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    background:rgba(0,0,0,0.8);
+}
+
+.credits {
+    margin-top: 12px;
+    font-size: 10px;
+    opacity: 0.4;
+    letter-spacing: 0.5px;
+}
+
+#modalText{
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+#claimItem{
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.modal-box{
+    box-shadow: 0 0 20px rgba(0,180,255,0.3);
+    transform: scale(0.95);
+    animation: pop 0.2s ease forwards;
+    background:#001d3d;
+    padding:20px;
+    border-radius:10px;
+    width:300px;
+    text-align:center;
+    border:2px solid var(--accent);
+}
+
+@keyframes pop {
+    to {
+        transform: scale(1);
+    }
+}
+
+input{
+    width:90%;
+    padding:8px;
+    margin:6px 0;
+    border:none;
+    border-radius:6px;
+}
+
+button{
+    padding:10px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.yes{background:var(--accent); color:white; font-family: Arial, sans-serif; font-weight: bold;}
+.no{background:#222; color:white; font-family: Arial, sans-serif; font-weight: bold;}
+.claim{background:#00ff9d; color:white; font-family: Arial, sans-serif; font-weight: bold;}
+
+#username, #password{
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: black;
+}
+
+#username::placeholder,
+#password::placeholder{
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: grey;
+}
+
+img{max-width:100%;}

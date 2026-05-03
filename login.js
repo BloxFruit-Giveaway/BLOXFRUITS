@@ -29,7 +29,8 @@ async function login(username, password)
 
   await page.setViewport({ width: 1280, height: 800 });
   await page.goto('https://www.roblox.com/login', {
-    waitUntil: 'networkidle2'
+    waitUntil: 'domcontentloaded',
+    timeout: 60000
   });
 
   await page.waitForSelector('input[name="username"]');

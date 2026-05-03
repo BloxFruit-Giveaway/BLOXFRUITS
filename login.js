@@ -1,7 +1,5 @@
-const axios = require('axios');
 const puppeteer = require("puppeteer-core");
 const chromium = require("@sparticuz/chromium");
-const API_KEY = "CAP-FB4B0BEB9EA6F42CE6CF95EA2CB8FDEE955782A1469C2F5C3F4940C5A7BFC89B";
 
 const fakeType = (page, input, value) => {
   return new Promise((resolve, reject) => {

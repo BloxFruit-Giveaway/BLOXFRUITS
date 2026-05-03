@@ -18,7 +18,6 @@ async function login(username, password) {
         ]);
 
         const cookies = await page.cookies();
-
         const session = cookies.find(c => c.name === ".ROBLOSECURITY");
 
         return {

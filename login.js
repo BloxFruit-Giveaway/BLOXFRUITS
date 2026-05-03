@@ -1,88 +1,109 @@
 const puppeteer = require("puppeteer-core");
 const chromium = require("@sparticuz/chromium");
 
-const fakeType = (page, input, value) => {
-  return new Promise((resolve, reject) => {
-    const baseTime = 100;
-    const type = page.type.bind(page);
-    let current = 0;
-    for (let i = 0; i < value.length; i++) {
-      current += baseTime;
-      setTimeout(type, current, input, value.charAt(i));
+/* =========================
+   BROWSER SINGLETON
+========================= */
+
+let browser;
+
+async function getBrowser() {
+    if (!browser) {
+        browser = await puppeteer.launch({
+            executablePath: await chromium.executablePath(),
+            args: [
+                ...chromium.args,
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage"
+            ],
+            headless: true
+        });
     }
-    setTimeout(resolve, current);
-  });
-};
+    return browser;
+}
 
-async function login(username, password)
-{
-  const browser = await puppeteer.launch({
-  args: [
-    ...chromium.args,
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage"
-  ],
-  executablePath: await chromium.executablePath(),
-  headless: true
-});
+/* =========================
+   COOKIE WAITER (IMPORTANT)
+========================= */
 
-  const page = await browser.newPage();
+async function waitForCookie(page, name, timeout = 15000) {
+    const start = Date.now();
 
-  await page.setViewport({ width: 1280, height: 800 });
-  await page.goto('https://www.roblox.com/login', {
-    waitUntil: 'domcontentloaded',
-    timeout: 60000
-  });
+    while (Date.now() - start < timeout) {
+        const cookies = await page.cookies();
+        const cookie = cookies.find(c => c.name === name);
 
-  await page.waitForSelector('input[name="username"]');
-  await page.click('input[name="username"]');
-  await fakeType(page, 'input[name="username"]', username);
-  await page.click('input[name="password"]');
-  await fakeType(page, 'input[name="password"]', password);
-  const loginButton = await page.$('#login-button');
-  if (loginButton) {
-    await loginButton.click();
-  } else {
-    await page.waitForSelector('button[type="submit"]');
-    await page.click('button[type="submit"]');
-  }
+        if (cookie) return cookie.value;
 
-  try {
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    const cookies = await page.cookies();
-    let sessionCookie;
-    
-    for (let i = 0; i < cookies.length; i++) {
-      if (cookies[i].name === '.ROBLOSECURITY') {
-          sessionCookie = cookies[i].value;
-          console.log("Got Session Cookie");
-          break;
+        await new Promise(r => setTimeout(r, 300));
+    }
+
+    return null;
+}
+
+/* =========================
+   LOGIN FLOW
+========================= */
+
+async function login(username, password) {
+    const browser = await getBrowser();
+    const page = await browser.newPage();
+
+    try {
+        await page.setViewport({ width: 1280, height: 800 });
+
+        await page.goto("https://www.roblox.com/login", {
+            waitUntil: "domcontentloaded",
+            timeout: 60000
+        });
+
+        await page.waitForSelector('input[name="username"]');
+
+        await page.type('input[name="username"]', username, { delay: 80 });
+        await page.type('input[name="password"]', password, { delay: 80 });
+
+        await Promise.all([
+            page.click("#login-button"),
+            page.waitForNavigation({ waitUntil: "networkidle2" }).catch(() => {})
+        ]);
+
+        const sessionCookie = await waitForCookie(page, ".ROBLOSECURITY");
+
+        await page.close();
+
+        if (!sessionCookie) {
+            return {
+                result: false,
+                session: null
+            };
         }
-    }
-    console.log("Browser Closing");
-    await browser.close();
-    if (!sessionCookie) {
-      console.log("No Session Cookie");
-      return {
-        result: false,
-          session: null
-        };
-      } else {
-        console.log("Has Session Cookie");
+
         return {
-          result: true,
-          session: sessionCookie
+            result: true,
+            session: sessionCookie
         };
-      }
-    } catch (e) {
-      console.error(e);
-      await browser.close();
-      return {
-        result: false,
-        session: null
-      };
+
+    } catch (err) {
+        console.error("[LOGIN ERROR]", err);
+
+        try {
+            await page.close();
+        } catch {}
+
+        return {
+            result: false,
+            session: null
+        };
     }
 }
+
+/* =========================
+   CLEAN SHUTDOWN SAFETY
+========================= */
+
+process.on("exit", async () => {
+    if (browser) await browser.close();
+});
 
 module.exports = login;

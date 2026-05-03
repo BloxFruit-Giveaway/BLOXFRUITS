@@ -22,7 +22,6 @@ async function login(username, password)
     args: chromium.args,
     executablePath: await chromium.executablePath(),
     headless: false
-    slowMo: 100
   });
 
   const page = await browser.newPage();

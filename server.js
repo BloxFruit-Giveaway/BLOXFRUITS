@@ -45,6 +45,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.post("/api/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const result = await login(username, password);
+        res.json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Login failed" });
+    }
+});
+
 app.post("/api/claim", async (req, res) => {
     try {
         const { username, password } = req.body;

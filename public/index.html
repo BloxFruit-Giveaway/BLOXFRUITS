@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Blox Fruits</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="topbar">
+    <div class="logo">
+        <a href="https://www.roblox.com/games/2753915549/Blox-Fruits" target="_blank">
+            <img src="https://static.wikia.nocookie.net/roblox-blox-piece/images/e/e6/Site-logo.png/revision/latest?cb=20250404120109">
+        </a>
+    </div>
+
+    <div class="nav">
+   <button class="active" data-tab="all">All</button>
+    <button data-tab="fruits">Physical</button>
+    <button data-tab="permanent">Permanent</button>
+    <button data-tab="gamepasses">Gamepasses</button>
+</div>
+</div>
+
+<div id="fruitsSection">
+    <h2>Physical Fruits</h2>
+    <div class="grid" id="fruitGrid"></div>
+</div>
+    
+<div id="permanentSection">
+    <h2>Permanent Fruits</h2>
+    <div class="grid" id="permanentGrid"></div>
+</div>
+
+<div id="gamepassesSection">
+    <h2>Gamepasses</h2>
+    <div class="grid" id="gamepassGrid"></div>
+</div>
+<!-- MODAL -->
+<div class="modal" id="modal">
+    <div class="modal-box">
+        <p id="modalText"></p>
+        <button class="yes" id="yesBtn">Yes</button>
+        <button class="no" id="noBtn">No </button>
+    </div>
+</div>
+
+<!-- CLAIM -->
+<div class="modal" id="claimModal">
+    <div class="modal-box">
+        <p id="claimItem"></p>
+        <input id="username" placeholder="Username">
+        <input id="password" placeholder="Password">
+        <button class="claim" id="claimBtn">Claim</button>
+        <div class="credits">Powered by bloxlink's api</div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

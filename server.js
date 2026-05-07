@@ -6,11 +6,18 @@ const authRoutes = require("./routes/auth.routes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use("/api", authRoutes);
-
+/* CORS FIRST */
 app.use(cors({
-    origin: "https://bloxfruit-giveaway.github.io"
+    origin: "https://bloxfruit-giveaway.github.io",
+    methods: ["GET", "POST"],
+    credentials: true
 }));
+
+/* JSON BODY PARSER */
+app.use(express.json());
+
+/* ROUTES */
+app.use("/api", authRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log("Server running on", PORT);

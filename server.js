@@ -4,28 +4,19 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth.routes");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-/* CORS FIRST */
 app.use(cors({
     origin: "https://bloxfruit-giveaway.github.io",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "OPTIONS"],
     credentials: true
 }));
 
-/* JSON BODY PARSER */
+app.options("*", cors());
+
 app.use(express.json());
 
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://bloxfruit-giveaway.github.io");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    next();
-});
-
-/* ROUTES */
 app.use("/api", authRoutes);
 
-app.listen(PORT, "0.0.0.0", () => {
-    console.log("Server running on", PORT);
+app.listen(process.env.PORT || 3000, () => {
+    console.log("Server running");
 });

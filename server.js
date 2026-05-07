@@ -1,17 +1,13 @@
 const express = require("express");
-const cors = require("cors");
+const path = require("path");
 
 const authRoutes = require("./routes/auth.routes");
 
 const app = express();
 
-app.use(cors({
-    origin: "https://bloxfruit-giveaway.github.io",
-    methods: ["GET", "POST", "OPTIONS"],
-    credentials: true
-}));
-
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", authRoutes);
 
